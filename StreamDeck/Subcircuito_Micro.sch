@@ -256,9 +256,9 @@ Wire Wire Line
 	4300 2500 4300 2600
 Text GLabel 3700 4300 0    50   Input ~ 0
 CS0
-Text GLabel 3700 3100 0    50   Input ~ 0
+Text GLabel 3700 4100 0    50   Input ~ 0
 CS1
-Text GLabel 3700 3200 0    50   Input ~ 0
+Text GLabel 3700 4200 0    50   Input ~ 0
 CS2
 Text GLabel 3700 3300 0    50   Input ~ 0
 CS3
@@ -380,4 +380,46 @@ Connection ~ 3650 5450
 Wire Wire Line
 	3850 4750 3650 4750
 Connection ~ 3650 4750
+Text GLabel 3450 3000 0    50   Input ~ 0
+RST_ARDUINO
+Wire Wire Line
+	3500 3000 3450 3000
+Connection ~ 3500 3000
+$Comp
+L Device:R R?
+U 1 1 5FF97FA5
+P 3500 2350
+AR Path="/5FF97FA5" Ref="R?"  Part="1" 
+AR Path="/5FEF57A5/5FF97FA5" Ref="R19"  Part="1" 
+F 0 "R19" H 3570 2396 50  0000 L CNN
+F 1 "10K" H 3570 2305 50  0000 L CNN
+F 2 "" V 3430 2350 50  0001 C CNN
+F 3 "~" H 3500 2350 50  0001 C CNN
+	1    3500 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3500 2500 3500 2550
+Connection ~ 3500 2550
+$Comp
+L power:+5V #PWR054
+U 1 1 5FF99226
+P 3500 2050
+F 0 "#PWR054" H 3500 1900 50  0001 C CNN
+F 1 "+5V" H 3515 2223 50  0000 C CNN
+F 2 "" H 3500 2050 50  0001 C CNN
+F 3 "" H 3500 2050 50  0001 C CNN
+	1    3500 2050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3500 2050 3500 2200
+Text GLabel 3700 3100 0    50   Input ~ 0
+TXD
+Text GLabel 3700 3200 0    50   Input ~ 0
+RXD
+NoConn ~ 6700 3200
+NoConn ~ 6700 3300
+NoConn ~ 6700 4200
+NoConn ~ 6700 4300
 $EndSCHEMATC
