@@ -5,7 +5,7 @@
 
 void InitKnob(void);
 int mappingRotEncoder(int pin1,int pin2,int knobLastState,int value);
-void vTask3(void *pvParameters);
-void TaskCreateEncoder(void);
+void vTaskmappingRotEncoder(void *pvParameters);
+void TaskCreateRotEncoder(void);
 int knobValue(int num);
 #endif /*_ROTARYENCODER_H_*/

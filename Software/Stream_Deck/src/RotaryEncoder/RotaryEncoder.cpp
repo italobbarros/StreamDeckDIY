@@ -33,7 +33,7 @@ int mappingRotEncoder(int pin1,int pin2,int knobLastState,int value){
     } 
     knobLastState = aState; // Updates the previous state of the outputA with the current state
  }
-void vTask3(void *pvParameters){ /*Task resposible for mapping encoder*/
+void vTaskmappingRotEncoder(void *pvParameters){ /*Task resposible for mapping encoder*/
   InitKnob();
   int value1 = 0;
   int value2 = 0;
@@ -48,7 +48,6 @@ void vTask3(void *pvParameters){ /*Task resposible for mapping encoder*/
     knob3value = mappingRotEncoder(knob3_pin1,knob3_pin2,knob3LastState,value3);
   }
 }
-
 int knobValue(int num){
   if(num==1){
     return knob1value;
@@ -59,7 +58,7 @@ int knobValue(int num){
     return knob3value;
   }
 }
-void TaskCreateEncoder(void){
-  xTaskCreatePinnedToCore(vTask3,"TASK3.1",configMINIMAL_STACK_SIZE+1024+1024+1024,NULL,1,&task3Handle,PRO_CPU_NUM);
+void TaskCreateRotEncoder(void){
+  xTaskCreatePinnedToCore(vTaskmappingRotEncoder,"TaskmappingRotEncoder",configMINIMAL_STACK_SIZE+1024+1024,NULL,1,&task3Handle,PRO_CPU_NUM);
 }
 

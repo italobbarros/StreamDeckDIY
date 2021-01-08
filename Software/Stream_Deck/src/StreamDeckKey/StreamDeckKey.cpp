@@ -1,97 +1,63 @@
 #include "StreamDeckKey/StreamDeckKey.h"
 #include <Settings.h>
 
-TaskHandle_t task2Handle  = NULL;
+TaskHandle_t TaskSendBleKeyHandle  = NULL;
 BleKeyboard bleKeyboard;
 TaskHandle_t TaskSendEncoderHandle1 = NULL;
 TaskHandle_t TaskSendEncoderHandle2 = NULL;
 TaskHandle_t TaskSendEncoderHandle3 = NULL;
-
-void bleInit(void){
-  Serial.println("Starting BLE work!");
-  bleKeyboard.begin();
+bool AtualizaBLE1 = false;
+void Sendkey(const uint8_t key1, const uint8_t key2){
+  Serial.println("Sending: "+ String(key1)+ " + " + String(key2));
+  bleKeyboard.press(key1);
+  bleKeyboard.press(key2);
+  vTaskDelay(pdMS_TO_TICKS(100));
+  bleKeyboard.releaseAll();
 }
-void SendKeyboard (uint16_t AnalogReadButton1,uint16_t AnalogReadButton2){
-    if(bleKeyboard.isConnected()){
-      vTaskDelay(pdMS_TO_TICKS(1000));
-      if(analogRead(AnalogReadButton1)<570){
-        /*Serial.println("Sending Alt+F1...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F1);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
-      }else if (analogRead(AnalogReadButton1)>600||analogRead(AnalogReadButton1)<680)
-      {
-        /*Serial.println("Sending Alt+F2...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F2);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
-      }else if (analogRead(AnalogReadButton1)>710||analogRead(AnalogReadButton1)<790)
-      {
-        /*Serial.println("Sending Alt+F3...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F3);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
-      }else if (analogRead(AnalogReadButton1)>800||analogRead(AnalogReadButton1)<900)
-      {
-        /*Serial.println("Sending Alt+F4...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F4);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
+void SendBleKey (void){
+  if(bleKeyboard.isConnected()){
+    //Serial.println("Dispositivo conectado!");
+    vTaskDelay(pdMS_TO_TICKS(50));
+    if(AtualizaBLE1 != StatusLCD1){
+      if(StatusLCD1){
+        Sendkey(KEY_LEFT_CTRL,KEY_F23);
       }
-      else if(analogRead(AnalogReadButton2)<570){
-        /*Serial.println("Sending Alt+F5...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F5);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
-      }else if (analogRead(AnalogReadButton2)>600||analogRead(AnalogReadButton2)<680)
-      {
-        /*Serial.println("Sending Alt+F6...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F6);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
-      }else if (analogRead(AnalogReadButton2)>710||analogRead(AnalogReadButton2)<790)
-      {
-        /*Serial.println("Sending Alt+F7...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F7);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
-      }else if (analogRead(AnalogReadButton2)>800||analogRead(AnalogReadButton2)<900)
-      {
-        /*Serial.println("Sending Alt+F4...");*/
-        bleKeyboard.press(KEY_LEFT_ALT);
-        bleKeyboard.press(KEY_F8);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        bleKeyboard.releaseAll();
+      else{
+        Sendkey(KEY_LEFT_CTRL,KEY_F24);
       }
+      AtualizaBLE1 = StatusLCD1;
     }
+  }  
+  else{
+        Serial.println("Nenhum dispositivo conectado");
+        vTaskDelay(pdMS_TO_TICKS(5000));
+  }
+  vTaskDelay(pdMS_TO_TICKS(100));
 }
-void vTask2(void *pvParameters){ /*Task resposible for mapping keyboard*/
-  pinMode(Button1,INPUT);
-  pinMode(Button2,INPUT);
+void vTaskSendBleKey(void *pvParameters){ /*Task resposible for send keyboard bluetooth*/
+  Serial.println("Starting BLE work!");
+  bleKeyboard.begin();          /*Bluetooth Keyboard initialize*/
+  vTaskDelay(pdMS_TO_TICKS(1000));
   while (1)
   {
-    SendKeyboard(analogRead(Button1),analogRead(Button2));
+    SendBleKey();
   }
 }
 void vTaskSendEncoder(void *pvParameters){
-  int value = (int)pvParameters;
+  int Valueknob = (int)pvParameters;
   while(1){
-    if(bleKeyboard.isConnected()){
+    if(bleKeyboard.isConnected()){  /*falta ajeitar o que ele vai mandar*/
       vTaskDelay(pdMS_TO_TICKS(1000));
-      bleKeyboard.write(value);
-      vTaskDelay(pdMS_TO_TICKS(10));
+      /*
+      
+      código
+
+      */
     }
   }
 }
-void TaskCreateKeyboard(void){
-  xTaskCreatePinnedToCore(vTask2,"TASK2.1",configMINIMAL_STACK_SIZE+1024+1024,NULL,2,&task2Handle,PRO_CPU_NUM);
+void TaskCreateSendBleKey(void){
+  xTaskCreatePinnedToCore(vTaskSendBleKey,"vTaskSendBleKey",configMINIMAL_STACK_SIZE+1024+1024,NULL,1,&TaskSendBleKeyHandle,PRO_CPU_NUM);
 }
 void TaskCreateSendEncoder(int knob1_value_receive,int knob2_value_receive,int knob3_value_receive ){
   xTaskCreatePinnedToCore(vTaskSendEncoder,"TaskSendEncoder1",configMINIMAL_STACK_SIZE+1024+1024,(void*) knob1_value_receive,2,&TaskSendEncoderHandle1,PRO_CPU_NUM);
