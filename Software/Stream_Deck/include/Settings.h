@@ -5,8 +5,6 @@
 
 /*StreamDeckKey Settings*/
 const static int Button1 = 33; /*Analog input for the first 4 buttons*/
-
-
 /*LCD Settings*/
 
 extern bool StatusLCD1; //variavel que determina se a tela esta no modo 1 ou modo 2
@@ -40,10 +38,10 @@ extern int knob1value,knob2value,knob3value;
 /*Keyboard LCD*/
 
 /*Sd Card reader pins*/
-const static int SdCardMISO = 19;       //GPIO12 é o HSPI MISO   GPIO19 é o VSPI MISO
-const static int SdCardMOSI = 23;       //GPIO13 é o HSPI MOSI   GPIO23 é o VSPI MOSI
-const static int SdCardSCLK = 18;       //GPIO14 é o HSPI CLK    GPIO18 é o VSPI CLK
-const static int SdCardCS   = 34;       //GPIO15 é o HSPI CS0    GPIO05 é o VSPI CS0
+const static int SD_MISO_PIN = 19;       //GPIO12 é o HSPI MISO   GPIO19 é o VSPI MISO
+const static int SD_MOSI_PIN = 23;       //GPIO13 é o HSPI MOSI   GPIO23 é o VSPI MOSI
+const static int SD_SCK_PIN  = 18;       //GPIO14 é o HSPI CLK    GPIO18 é o VSPI CLK
+const static int SD_SS_PIN   = 34;       //GPIO15 é o HSPI CS0    GPIO05 é o VSPI CS0
 /*O VSPI esta sendo utilizado para os displays*/
 /*------------------------------------------------------------------------*/
 

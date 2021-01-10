@@ -9,6 +9,13 @@ void decoLCD(int CS);
 void InitLCDs(uint8_t rotation);/*LCDs initialize*/
 void TaskCreateLCDsReceive(void);/*Task Create of LCDs with FreeRTOS*/
 void TaskCreateLCDsSend(void);
+void listFiles(void);
+void createArray(const char *filename);
+void jpegRender(int xpos, int ypos);
+void drawJpeg(const char *filename, int xpos, int ypos);
+void listDir(fs::FS &fs, const char * dirname, uint8_t levels);
+void showTime(uint32_t msTime);
+void jpegRendertransparent(int xpos, int ypos,uint16_t transparent);
 void vTaskLCD1(void *pvParameters);
 void vTaskLCD2(void *pvParameters);
 void vTaskLCD3(void *pvParameters);
